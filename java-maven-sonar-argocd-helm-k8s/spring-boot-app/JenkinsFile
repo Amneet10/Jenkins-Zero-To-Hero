@@ -2,6 +2,7 @@ pipeline {
   agent {
     docker {
       image 'maven:latest'  // Use the latest Maven image from Docker Hub
+      args '-v $HOME/.m2:/root/.m2' // Mount Maven repository volume
       // args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
@@ -14,14 +15,12 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'ls -ltr'
-        // build the project and create a JAR file
-        sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn clean package'
+        
+        sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app $$ mvn clean install'
       }
     }
   }
 }
-
 
 //     // //stage('Static Code Analysis') {
 //     //   environment {
